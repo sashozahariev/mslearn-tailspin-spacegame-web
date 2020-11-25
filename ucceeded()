@@ -1,0 +1,49 @@
+[33mcommit bc3b2e03958934f2434a5d70c5fad844ab11dbec[m[33m ([m[1;36mHEAD -> [m[1;32mbuild-pipeline[m[33m, [m[1;31morigin/build-pipeline[m[33m)[m
+Author: Sasho Zahariev <zaharievs@gmail.com>
+Date:   Tue Nov 24 17:08:18 2020 +0200
+
+    Add build tasks 2
+
+[1mdiff --git a/azure-pipelines-1.yml b/azure-pipelines-1.yml[m
+[1mindex c91e53f..085ed3e 100644[m
+[1m--- a/azure-pipelines-1.yml[m
+[1m+++ b/azure-pipelines-1.yml[m
+[36m@@ -9,16 +9,12 @@[m [mtrigger:[m
+ pool:[m
+   vmImage: 'ubuntu-18.04'[m
+   demands:[m
+[31m-  - npm[m
+[31m-[m
+[31m-variables:[m
+[31m-  buildConfiguration: 'Release'[m
+[32m+[m[32m    - npm[m
+ [m
+ steps:[m
+ - task: UseDotNet@2[m
+   displayName: 'Use .NET Core SDK 3.1.300'[m
+   inputs:[m
+[31m-    packageType: sdk[m
+     version: 3.1.300[m
+ [m
+ - task: Npm@1[m
+[36m@@ -47,4 +43,17 @@[m [msteps:[m
+   inputs:[m
+     command: 'build'[m
+     arguments: '--no-restore --configuration Release'[m
+[31m-    projects: '**/*.csproj'[m
+\ No newline at end of file[m
+[32m+[m[32m    projects: '**/*.csproj'[m
+[32m+[m
+[32m+[m[32m- task: DotNetCoreCLI@2[m
+[32m+[m[32m  displayName: 'Publish the project - Release'[m
+[32m+[m[32m  inputs:[m
+[32m+[m[32m    command: 'publish'[m
+[32m+[m[32m    projects: '**/*.csproj'[m
+[32m+[m[32m    publishWebProjects: false[m
+[32m+[m[32m    arguments: '--no-build --configuration Release --output $(Build.ArtifactStagingDirectory)/Release'[m
+[32m+[m[32m    zipAfterPublish: true[m
+[32m+[m
+[32m+[m[32m- task: PublishBuildArtifacts@1[m
+[32m+[m[32m  displayName: 'Publish Artifact: drop'[m
+[32m+[m[32m  condition: succeeded()[m
+\ No newline at end of file[m
